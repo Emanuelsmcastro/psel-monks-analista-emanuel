@@ -1,6 +1,7 @@
 import { GenericSectionType } from "../types/globalTypes";
 
 const BASE_URL = "http://localhost:8000/wp-json/wp/v2";
+const BASE_PSEL_URL = "http://localhost:8000/wp-json/psel";
 
 export async function fetchHeroLPSections(): Promise<GenericSectionType[]> {
   const response = await fetch(`${BASE_URL}/hero-lp-section?_embed`);
@@ -40,4 +41,24 @@ export async function fetchCardsSection(): Promise<GenericSectionType[]> {
     throw new Error("Failed to fetch Cards section");
   }
   return (await response.json()) as GenericSectionType[];
+}
+
+export async function submitContactForm(data: {
+  name: string;
+  email: string;
+  message: string;
+}) {
+  const response = await fetch(`${BASE_PSEL_URL}/v1/contact`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to submit contact form");
+  }
+
+  return response.json();
 }

@@ -5,6 +5,7 @@ import ContactSection from "@components/ContactSection/indext";
 import HeroLPSection from "@components/HeroLPSection";
 import Products from "@components/Products";
 import SimpleGallery from "@components/SimpleGallery";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (

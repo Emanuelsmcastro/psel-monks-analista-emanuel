@@ -1,8 +1,68 @@
 import ContactImage from "@assets/contact-img.png";
+import { submitContactForm } from "@services/wordpress";
+import { useState, useRef } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function ContactSection() {
+  const defaultFormData = {
+    name: "",
+    email: "",
+    message: "",
+  };
+
+  const [formData, setFormData] = useState(defaultFormData);
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    message: false,
+  });
+
+  // Refs para debounce
+  const debounceTimers = useRef<{ [key: string]: NodeJS.Timeout }>({});
+
+  const validationRules = {
+    name: (value: string) => {
+      if (!value.trim()) return "Nome é obrigatório";
+      return "";
+    },
+    email: (value: string) => {
+      if (!value.trim()) return "Email é obrigatório";
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) return "Email inválido";
+      return "";
+    },
+    message: (value: string) => {
+      if (!value.trim()) return "Mensagem é obrigatória";
+      return "";
+    },
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
+    const error = validationRules[field as keyof typeof validationRules](value);
+    setErrors((prev) => ({ ...prev, [field]: !!error }));
+
+    if (debounceTimers.current[field]) {
+      clearTimeout(debounceTimers.current[field]);
+    }
+
+    debounceTimers.current[field] = setTimeout(() => {
+      if (error) toast.error(error);
+    }, 1000);
+  };
+
+  function handleSubmit() {
+    submitContactForm(formData).then(() => {
+      toast.success("Mensagem enviada com sucesso!");
+      setFormData(defaultFormData);
+      setErrors({ name: false, email: false, message: false });
+    });
+  }
+
   return (
     <section className="text-[var(--color-secundary)] px-6 pt-20 bg-[var(--bg-secundary)] mt-20">
+      <ToastContainer position="top-right" autoClose={3000} />
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 items-center p-8 rounded-2xl">
         <div className="flex justify-center">
           <img
@@ -30,43 +90,64 @@ export default function ContactSection() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input
               type="text"
-              placeholder="Categoria*"
-              className="px-4 py-2 rounded-md bg-white text-sm border border-gray-300"
+              placeholder="Nome*"
+              className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 ${
+                errors.name
+                  ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
+                  : "border-gray-300"
+              }`}
+              value={formData.name}
+              onChange={(e) => handleChange("name", e.target.value)}
             />
+
             <input
-              type="text"
-              placeholder="Categoria*"
-              className="px-4 py-2 rounded-md bg-white text-sm border border-gray-300"
+              type="email"
+              placeholder="Email*"
+              className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 ${
+                errors.email
+                  ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
+                  : "border-gray-300"
+              }`}
+              value={formData.email}
+              onChange={(e) => handleChange("email", e.target.value)}
             />
-            <input
-              type="text"
-              placeholder="Categoria"
-              className="px-4 py-2 rounded-md bg-white text-sm border border-gray-300"
-            />
-            <input
-              type="text"
-              placeholder="Categoria"
-              className="px-4 py-2 rounded-md bg-white text-sm border border-gray-300"
+
+            <textarea
+              placeholder="Mensagem*"
+              className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 min-h-[120px] sm:col-span-2 resize-none ${
+                errors.message
+                  ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
+                  : "border-gray-300"
+              }`}
+              value={formData.message}
+              onChange={(e) => handleChange("message", e.target.value)}
             />
           </div>
 
-          <div className="flex flex-row gap-8 items-center">
-            <span className="font-semibold">Verificação de segurança</span>
-            <div className="flex items-center gap-2 bg-[#DFDCD5] p-2 rounded-md">
-              <span className="text-purple-600 font-semibold">427</span>
-              <span>+</span>
-              <span className="text-purple-600 font-semibold">628</span>
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 items-start lg:items-center">
+            <span className="shrink-0 font-semibold w-max">
+              Verificação de segurança
+            </span>
+            <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 flex-grow-1 w-full">
+              <div className="bg-[#DFDCD5] p-2 rounded-md flex items-center gap-4 lg:gap-8">
+                <span className="text-purple-600 font-semibold">427</span>
+                <span>+</span>
+                <span className="text-purple-600 font-semibold">628</span>
+              </div>
+              <span>=</span>
+              <input
+                type="text"
+                placeholder="Resultado*"
+                className="w-full lg:flex-1 px-4 py-2 rounded-md bg-white text-sm border border-gray-300"
+              />
             </div>
-            <span>=</span>
-            <input
-              type="text"
-              placeholder="Resultado*"
-              className="flex-1 px-4 py-2 rounded-md bg-white text-sm border border-gray-300"
-            />
           </div>
 
           <div className="flex justify-center">
-            <button className="bg-purple-200 text-purple-800 font-semibold text-sm px-6 py-2 rounded-md transition hover:bg-purple-300">
+            <button
+              className="bg-purple-200 text-purple-800 font-semibold text-sm px-6 py-2 rounded-md transition hover:bg-purple-300"
+              onClick={handleSubmit}
+            >
               Lorem ipsum
             </button>
           </div>
