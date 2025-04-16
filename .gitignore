@@ -1,0 +1,5 @@
+/backend/wordpress/*
+
+!/backend/wordpress/wp-content/
+!/backend/wordpress/wp-content/themes/
+!/backend/wordpress/wp-content/themes/psel-monks-theme/**
