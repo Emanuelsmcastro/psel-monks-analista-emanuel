@@ -1,4 +1,5 @@
 import AppSection from "@components/AppSection";
+import CardsSection from "@components/CardsSection";
 import CategoriesSection from "@components/CategoriesSection";
 import HeroLPSection from "@components/HeroLPSection";
 import Products from "@components/Products";
@@ -12,6 +13,7 @@ function App() {
       <SimpleGallery />
       <AppSection />
       <CategoriesSection />
+      <CardsSection />
     </>
   );
 }

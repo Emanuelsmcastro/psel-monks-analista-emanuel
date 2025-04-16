@@ -1,6 +1,7 @@
 import { fetchCategoriesSection } from "@services/wordpress";
 import { GenericSectionType } from "../../types/globalTypes";
 import { useEffect, useState } from "react";
+import parse from "html-react-parser";
 
 export default function CategoriesSection() {
   const [categoriesSection, setCategoriesSection] = useState<
@@ -35,12 +36,9 @@ export default function CategoriesSection() {
               ))}
           </div>
         ) : (
-          <div
-            className="flex flex-wrap gap-4 max-w-[80%] mx-auto align-center justify-center"
-            dangerouslySetInnerHTML={{
-              __html: categoriesSection[0].content.rendered,
-            }}
-          ></div>
+          <div className="flex flex-wrap gap-4 max-w-[80%] mx-auto align-center justify-center">
+            {parse(categoriesSection[0].content.rendered)}
+          </div>
         )}
       </div>
     </section>
