@@ -1,8 +1,36 @@
 import MonksImage from "@assets/monks-image.png";
 import Logo from "@assets/logo.png";
 import Scroll from "@assets/scroll.png";
+import { fetchHeroLPSections } from "@services/wordpress";
+import { HeroLPSectionType } from "../../types/globalTypes";
+import { useEffect, useState } from "react";
 
 export default function HeroLPSection() {
+  const emptyHeroLPSection: HeroLPSectionType = {
+    id: 0,
+    title: {
+      rendered: "",
+    },
+    content: {
+      rendered: "",
+    },
+    _embedded: {
+      "wp:featuredmedia": [
+        {
+          source_url: "",
+        },
+      ],
+    },
+  };
+  const [heroLPSection, setHeroLPSection] =
+    useState<HeroLPSectionType>(emptyHeroLPSection);
+
+  useEffect(() => {
+    fetchHeroLPSections().then((data) => {
+      setHeroLPSection(data[0]);
+    });
+  }, [setHeroLPSection]);
+
   return (
     <section
       id="hero-lp"
@@ -20,13 +48,18 @@ export default function HeroLPSection() {
         </div>
 
         <div className="flex flex-col gap-2 sm:gap-4 mb-6 sm:mb-10 lg:mb-14">
-          <h1 className="font-bold text-xl sm:text-2xl lg:text-3xl">
-            Lorem ipsum dolor sit amet consectetur
-          </h1>
-          <p className="font-thin text-base sm:text-[18px] lg:text-[20px] tracking-[0.02em] leading-[1.4]">
-            Lorem ipsum dolor sit amet consectetur. Semper orci adipiscing
-            faucibus sit scelerisque quis commodo aenean viverra
-          </p>
+          <h1
+            className="font-bold text-xl sm:text-2xl lg:text-3xl"
+            dangerouslySetInnerHTML={{
+              __html: heroLPSection?.title.rendered,
+            }}
+          ></h1>
+          <p
+            className="font-thin text-base sm:text-[18px] lg:text-[20px] tracking-[0.02em] leading-[1.4]"
+            dangerouslySetInnerHTML={{
+              __html: heroLPSection?.content.rendered,
+            }}
+          ></p>
         </div>
 
         <div className="flex justify-center p-4">

@@ -26,6 +26,8 @@
     "paths": {
       "@components/*": ["components/*"],
       "@assets/*": ["assets/*"],
+      "@services/*": ["services/*"],
+      "@types/*": ["types/*"],
 }
   },
   "include": ["src"]
