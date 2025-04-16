@@ -24,12 +24,16 @@ export default function HeroLPSection() {
   };
   const [heroLPSection, setHeroLPSection] =
     useState<HeroLPSectionType>(emptyHeroLPSection);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchHeroLPSections().then((data) => {
-      setHeroLPSection(data[0]);
+      if (!data || data.length > 0) {
+        setHeroLPSection(data[0]);
+        setIsLoading(false);
+      }
     });
-  }, [setHeroLPSection]);
+  }, []);
 
   return (
     <section
@@ -48,18 +52,28 @@ export default function HeroLPSection() {
         </div>
 
         <div className="flex flex-col gap-2 sm:gap-4 mb-6 sm:mb-10 lg:mb-14">
-          <h1
-            className="font-bold text-xl sm:text-2xl lg:text-3xl"
-            dangerouslySetInnerHTML={{
-              __html: heroLPSection?.title.rendered,
-            }}
-          ></h1>
-          <p
-            className="font-thin text-base sm:text-[18px] lg:text-[20px] tracking-[0.02em] leading-[1.4]"
-            dangerouslySetInnerHTML={{
-              __html: heroLPSection?.content.rendered,
-            }}
-          ></p>
+          {isLoading ? (
+            <>
+              <div className="h-6 w-1/2 bg-gray-600 rounded animate-pulse" />
+              <div className="h-4 w-full bg-gray-700 rounded animate-pulse" />
+              <div className="h-4 w-5/6 bg-gray-700 rounded animate-pulse" />
+            </>
+          ) : (
+            <>
+              <h1
+                className="font-bold text-xl sm:text-2xl lg:text-3xl"
+                dangerouslySetInnerHTML={{
+                  __html: heroLPSection?.title.rendered,
+                }}
+              ></h1>
+              <p
+                className="font-thin text-base sm:text-[18px] lg:text-[20px] tracking-[0.02em] leading-[1.4]"
+                dangerouslySetInnerHTML={{
+                  __html: heroLPSection?.content.rendered,
+                }}
+              ></p>
+            </>
+          )}
         </div>
 
         <div className="flex justify-center p-4">
