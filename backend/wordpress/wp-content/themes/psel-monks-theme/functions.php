@@ -9,6 +9,7 @@ register_nav_menus([
 
 require get_template_directory() . '/inc/custom-post-type.php';
 require get_template_directory() . '/inc/form-endpoint.php';
+require get_template_directory() . '/inc/homepage-section-cpt.php';
 
 
 add_action('rest_api_init', function () {
