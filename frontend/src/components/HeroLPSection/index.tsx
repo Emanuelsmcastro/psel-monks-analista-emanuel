@@ -2,11 +2,11 @@ import MonksImage from "@assets/monks-image.png";
 import Logo from "@assets/logo.png";
 import Scroll from "@assets/scroll.png";
 import { fetchHeroLPSections } from "@services/wordpress";
-import { HeroLPSectionType } from "../../types/globalTypes";
+import { GenericSectionType } from "../../types/globalTypes";
 import { useEffect, useState } from "react";
 
 export default function HeroLPSection() {
-  const emptyHeroLPSection: HeroLPSectionType = {
+  const emptyHeroLPSection: GenericSectionType = {
     id: 0,
     title: {
       rendered: "",
@@ -18,12 +18,13 @@ export default function HeroLPSection() {
       "wp:featuredmedia": [
         {
           source_url: "",
+          alt_text: "",
         },
       ],
     },
   };
   const [heroLPSection, setHeroLPSection] =
-    useState<HeroLPSectionType>(emptyHeroLPSection);
+    useState<GenericSectionType>(emptyHeroLPSection);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

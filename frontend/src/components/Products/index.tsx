@@ -1,24 +1,61 @@
-function Product(props: { title: string; content: string; imageURL: string }) {
+import { fetchProductsSections } from "@services/wordpress";
+import { GenericSectionType } from "../../types/globalTypes";
+import { useEffect, useState } from "react";
+
+function Product(props: {
+  title: string;
+  content: string;
+  imageURL: string | undefined;
+}) {
   return (
-    <div className="flex flex-col gap-4 bg-white p-2 rounded-3xl shadow-lg ">
+    <div className="flex flex-col gap-4 bg-white p-2 rounded-3xl shadow-lg w-[317px]">
       <img
         src={props.imageURL}
         alt="Product"
-        className="w-full h-[180px] object-cover rounded-2xl"
+        className="w-[317px] h-[180px] object-cover rounded-2xl"
       />
       <div className="flex flex-col gap-2">
         <h3 className="font-bold text-xl sm:text-2xl lg:text-3xl">
           {props.title}
         </h3>
-        <p className="font-thin text-base sm:text-[18px] lg:text-[20px] tracking-[0.02em] leading-[1.4]">
-          {props.content}
-        </p>
+        <p
+          className="font-thin text-base sm:text-[18px] lg:text-[20px] tracking-[0.02em] leading-[1.4]"
+          dangerouslySetInnerHTML={{ __html: props.content }}
+        ></p>
       </div>
     </div>
   );
 }
 
 export default function Products() {
+  const emptyProducts: GenericSectionType[] = [
+    {
+      id: 0,
+      title: {
+        rendered: "",
+      },
+      content: {
+        rendered: "",
+      },
+      _embedded: {
+        "wp:featuredmedia": [
+          {
+            source_url: "",
+            alt_text: "",
+          },
+        ],
+      },
+    },
+  ];
+
+  const [products, setProducts] = useState<GenericSectionType[]>(emptyProducts);
+
+  useEffect(() => {
+    fetchProductsSections().then((data) => {
+      setProducts(data);
+    });
+  }, []);
+
   return (
     <section id="products" className="text-[var(--color-secundary)] px-6 pt-20">
       <div>
@@ -30,32 +67,14 @@ export default function Products() {
           faucibus sit scelerisque quis commodo
         </p>
       </div>
-      <div className="flex flex-wrap gap-4 justify-start pt-10">
-        <Product
-          title="Test"
-          content="Test2"
-          imageURL="https://images.pexels.com/photos/2129796/pexels-photo-2129796.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-        />
-        <Product
-          title="Test"
-          content="Test2"
-          imageURL="https://images.pexels.com/photos/2129796/pexels-photo-2129796.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-        />
-        <Product
-          title="Test"
-          content="Test2"
-          imageURL="https://images.pexels.com/photos/2129796/pexels-photo-2129796.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-        />
-        <Product
-          title="Test"
-          content="Test2"
-          imageURL="https://images.pexels.com/photos/2129796/pexels-photo-2129796.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-        />
-        <Product
-          title="Test"
-          content="Test2"
-          imageURL="https://images.pexels.com/photos/2129796/pexels-photo-2129796.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-        />
+      <div className="flex flex-wrap gap-4 justify-center pt-10">
+        {products.map((product) => (
+          <Product
+            title={product.title.rendered}
+            content={product.content.rendered}
+            imageURL={product._embedded["wp:featuredmedia"]?.[0].source_url}
+          />
+        ))}
       </div>
     </section>
   );

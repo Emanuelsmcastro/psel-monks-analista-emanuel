@@ -19,3 +19,30 @@ add_action('rest_api_init', function () {
         return $value;
     });
 });
+
+add_action('rest_api_init', function () {
+    register_rest_route('wp/v2', '/media/(?P<id>\d+)', [
+        'methods'  => 'GET',
+        'callback' => 'get_public_media',
+        'permission_callback' => '__return_true',
+        'args' => [
+            'context' => [
+                'default' => 'view',
+            ],
+        ],
+    ]);
+}, 1);
+
+function get_public_media($request) {
+    $id = (int) $request['id'];
+    $post = get_post($id);
+
+    if (empty($post) || $post->post_type !== 'attachment') {
+        return new WP_Error('not_found', 'Media not found', ['status' => 404]);
+    }
+
+    // Reaproveita o controller oficial para manter o padrão de resposta
+    $controller = new WP_REST_Attachments_Controller('attachment');
+    $response = $controller->prepare_item_for_response($post, $request);
+    return rest_ensure_response($response);
+}
