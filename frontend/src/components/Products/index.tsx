@@ -91,6 +91,7 @@ export default function Products() {
               .map((_, index) => <ProductSkeleton key={index} />)
           : products.map((product) => (
               <Product
+                key={product.id}
                 title={product.title.rendered}
                 content={product.content.rendered}
                 imageURL={product._embedded["wp:featuredmedia"]?.[0].source_url}

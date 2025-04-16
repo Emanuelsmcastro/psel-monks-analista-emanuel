@@ -36,5 +36,23 @@ function register_homepage_section_cpt() {
     ];
 
     register_post_type('products-section', $args);
+
+    // Register a Simple Gallery for homepage sections
+    $labels = [
+        'name' => 'Simple Gallery',
+        'singular_name' => 'Simple Gallery',
+    ];
+
+    $args = [
+        'labels' => $labels,
+        'public' => true,
+        'show_in_rest' => true,
+        'menu_icon' => 'dashicons-screenoptions',
+        'supports' => ['title', 'editor', 'thumbnail', 'custom-fields'],
+        'has_archive' => false,
+        'rewrite' => ['slug' => 'simple-gallery'],
+    ];
+
+    register_post_type('simple-gallery', $args);
 }
 add_action('init', 'register_homepage_section_cpt');
