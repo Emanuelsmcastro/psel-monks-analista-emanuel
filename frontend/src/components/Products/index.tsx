@@ -2,6 +2,19 @@ import { fetchProductsSections } from "@services/wordpress";
 import { GenericSectionType } from "../../types/globalTypes";
 import { useEffect, useState } from "react";
 
+function ProductSkeleton() {
+  return (
+    <div className="flex flex-col gap-4 bg-white p-2 rounded-3xl shadow-lg w-[317px] animate-pulse">
+      <div className="w-[300px] h-[180px] bg-gray-300 rounded-2xl" />
+      <div className="flex flex-col gap-2">
+        <div className="h-6 bg-gray-300 rounded w-3/4" />
+        <div className="h-4 bg-gray-300 rounded w-full" />
+        <div className="h-4 bg-gray-300 rounded w-5/6" />
+      </div>
+    </div>
+  );
+}
+
 function Product(props: {
   title: string;
   content: string;
@@ -49,10 +62,14 @@ export default function Products() {
   ];
 
   const [products, setProducts] = useState<GenericSectionType[]>(emptyProducts);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchProductsSections().then((data) => {
-      setProducts(data);
+      if (!data || data.length > 0) {
+        setProducts(data);
+        setIsLoading(false);
+      }
     });
   }, []);
 
@@ -68,13 +85,17 @@ export default function Products() {
         </p>
       </div>
       <div className="flex flex-wrap gap-4 justify-center pt-10">
-        {products.map((product) => (
-          <Product
-            title={product.title.rendered}
-            content={product.content.rendered}
-            imageURL={product._embedded["wp:featuredmedia"]?.[0].source_url}
-          />
-        ))}
+        {isLoading
+          ? Array(4)
+              .fill(0)
+              .map((_, index) => <ProductSkeleton key={index} />)
+          : products.map((product) => (
+              <Product
+                title={product.title.rendered}
+                content={product.content.rendered}
+                imageURL={product._embedded["wp:featuredmedia"]?.[0].source_url}
+              />
+            ))}
       </div>
     </section>
   );
