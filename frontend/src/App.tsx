@@ -1,9 +1,11 @@
-import "./App.css";
-
 import HeroLPSection from "@components/HeroLPSection";
 
 function App() {
-  return <HeroLPSection />;
+  return (
+    <>
+      <HeroLPSection />
+    </>
+  );
 }
 
 export default App;
