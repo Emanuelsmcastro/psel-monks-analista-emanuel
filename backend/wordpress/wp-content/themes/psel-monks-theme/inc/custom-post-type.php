@@ -2,8 +2,8 @@
 
 function psel_register_form_cpt() {
     $labels = [
-        'name' => 'Formulários',
-        'singular_name' => 'Formulário',
+        'name' => 'Contact Submissions',
+        'singular_name' => 'Contact Submission',
     ];
 
     $args = [
@@ -14,6 +14,6 @@ function psel_register_form_cpt() {
         'menu_icon' => 'dashicons-feedback',
     ];
 
-    register_post_type('formulario', $args);
+    register_post_type('contact_submission', $args);
 }
 add_action('init', 'psel_register_form_cpt');
