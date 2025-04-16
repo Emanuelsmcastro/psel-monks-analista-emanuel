@@ -72,5 +72,23 @@ function register_homepage_section_cpt() {
     ];
 
     register_post_type('categories-section', $args);
+
+    // Register a Cards Section for homepage sections
+    $labels = [
+        'name' => 'Cards Section',
+        'singular_name' => 'Cards Section',
+    ];
+
+    $args = [
+        'labels' => $labels,
+        'public' => true,
+        'show_in_rest' => true,
+        'menu_icon' => 'dashicons-screenoptions',
+        'supports' => ['title', 'editor', 'thumbnail', 'custom-fields'],
+        'has_archive' => false,
+        'rewrite' => ['slug' => 'cards-section'],
+    ];
+
+    register_post_type('cards-section', $args);
 }
 add_action('init', 'register_homepage_section_cpt');
