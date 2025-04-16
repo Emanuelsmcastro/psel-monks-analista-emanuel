@@ -45,6 +45,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  --color-primary: #eae8e4;
+  --color-secundary: #2d2d2d;
+
   --bg-primary: #eae8e4;
   --bg-secundary: #2d2d2d;
 }
