@@ -54,5 +54,23 @@ function register_homepage_section_cpt() {
     ];
 
     register_post_type('simple-gallery', $args);
+
+    // Register a Categories for homepage sections
+    $labels = [
+        'name' => 'Category Section',
+        'singular_name' => 'Categories Section',
+    ];
+
+    $args = [
+        'labels' => $labels,
+        'public' => true,
+        'show_in_rest' => true,
+        'menu_icon' => 'dashicons-screenoptions',
+        'supports' => ['title', 'editor', 'thumbnail', 'custom-fields'],
+        'has_archive' => false,
+        'rewrite' => ['slug' => 'categories-section'],
+    ];
+
+    register_post_type('categories-section', $args);
 }
 add_action('init', 'register_homepage_section_cpt');
