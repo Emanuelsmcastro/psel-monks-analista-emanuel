@@ -61,9 +61,10 @@ export default function CardsSection() {
         {isLoading
           ? Array(3)
               .fill(null)
-              .map(() => <CardSkeleton />)
+              .map((_, index) => <CardSkeleton key={index} />)
           : cardsSection.map((card) => (
               <Card
+                key={card.id}
                 title={card.title.rendered}
                 content={card.content.rendered}
                 buttonText="Lorem ipsum"
