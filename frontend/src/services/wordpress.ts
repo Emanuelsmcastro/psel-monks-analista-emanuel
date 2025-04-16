@@ -1,4 +1,7 @@
-import { GenericSectionType } from "../types/globalTypes";
+import {
+  ContactSecurityChallenge,
+  GenericSectionType,
+} from "../types/globalTypes";
 
 const BASE_URL = "http://localhost:8000/wp-json/wp/v2";
 const BASE_PSEL_URL = "http://localhost:8000/wp-json/psel";
@@ -47,18 +50,36 @@ export async function submitContactForm(data: {
   name: string;
   email: string;
   message: string;
+  security_result: string;
 }) {
   const response = await fetch(`${BASE_PSEL_URL}/v1/contact`, {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
   });
 
+  const responseData = await response.json();
+
   if (!response.ok) {
-    throw new Error("Failed to submit contact form");
+    throw new Error(responseData.message || "Failed to submit contact form");
   }
 
-  return response.json();
+  return responseData;
+}
+
+export async function fetchContactSecurityChallenge(): Promise<ContactSecurityChallenge> {
+  const response = await fetch(`${BASE_PSEL_URL}/v1/security-challenge`, {
+    credentials: "include",
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch Security Challange");
+  }
+  return (await response.json()) as ContactSecurityChallenge;
 }

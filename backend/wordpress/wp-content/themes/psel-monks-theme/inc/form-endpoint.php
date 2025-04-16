@@ -8,7 +8,8 @@ add_action('rest_api_init', function () {
     ]);
 });
 
-function psel_handle_contact_form($request) {
+function psel_handle_contact_form($request)
+{
     $params = $request->get_json_params();
 
     $name = sanitize_text_field($params['name'] ?? '');
@@ -20,12 +21,24 @@ function psel_handle_contact_form($request) {
         return new WP_REST_Response(['error' => 'All fields are required.'], 400);
     }
 
+    if (!session_id()) {
+        session_start();
+    }
+
+    $sum_correct = $_SESSION['security_sum'] ?? null;
+    $user_sum = intval($request['security_result']);
+
+    if ($user_sum !== $sum_correct) {
+        return new WP_Error('invalid_sum', 'Incorrect code challenge sum.', ['status' => 400]);
+    }
+
+
     // Create the post
     $post_id = wp_insert_post([
         'post_type'   => 'contact_submission',
         'post_status' => 'publish',
         'post_title'  => "Contact from $name",
-        'post_content'=> $message,
+        'post_content' => $message,
         'meta_input'  => [
             'name'  => $name,
             'email' => $email,

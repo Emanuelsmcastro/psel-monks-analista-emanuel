@@ -1,6 +1,9 @@
 import ContactImage from "@assets/contact-img.png";
-import { submitContactForm } from "@services/wordpress";
-import { useState, useRef } from "react";
+import {
+  fetchContactSecurityChallenge,
+  submitContactForm,
+} from "@services/wordpress";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function ContactSection() {
@@ -8,13 +11,16 @@ export default function ContactSection() {
     name: "",
     email: "",
     message: "",
+    security_result: "",
   };
 
   const [formData, setFormData] = useState(defaultFormData);
+  const [codeChallenge, setCodeChallenge] = useState({ a: 0, b: 0 });
   const [errors, setErrors] = useState({
     name: false,
     email: false,
     message: false,
+    security_result: false,
   });
 
   // Refs para debounce
@@ -35,6 +41,12 @@ export default function ContactSection() {
       if (!value.trim()) return "Mensagem é obrigatória";
       return "";
     },
+    security_result: (value: string) => {
+      if (codeChallenge.a + codeChallenge.b !== parseInt(value)) {
+        return "Resultado da verificação de segurança é inválido";
+      }
+      return "";
+    },
   };
 
   const handleChange = (field: string, value: string) => {
@@ -52,13 +64,38 @@ export default function ContactSection() {
     }, 1000);
   };
 
-  function handleSubmit() {
-    submitContactForm(formData).then(() => {
-      toast.success("Mensagem enviada com sucesso!");
-      setFormData(defaultFormData);
-      setErrors({ name: false, email: false, message: false });
+  const getCodeChallenge = useCallback(() => {
+    fetchContactSecurityChallenge().then((data) => {
+      if (!data) {
+        toast.error("Erro ao buscar desafio de segurança");
+        return;
+      }
+      setCodeChallenge(data);
     });
+  }, []);
+
+  function handleSubmit() {
+    submitContactForm(formData)
+      .then((response) => {
+        console.log(response);
+        toast.success("Mensagem enviada com sucesso!");
+        setFormData(defaultFormData);
+        setErrors({
+          name: false,
+          email: false,
+          message: false,
+          security_result: false,
+        });
+        getCodeChallenge();
+      })
+      .catch((error) => {
+        toast.error(error.message || "Erro ao enviar mensagem");
+      });
   }
+
+  useEffect(() => {
+    getCodeChallenge();
+  }, [getCodeChallenge]);
 
   return (
     <section className="text-[var(--color-secundary)] px-6 pt-20 bg-[var(--bg-secundary)] mt-20">
@@ -130,15 +167,27 @@ export default function ContactSection() {
             </span>
             <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 flex-grow-1 w-full">
               <div className="bg-[#DFDCD5] p-2 rounded-md flex items-center gap-4 lg:gap-8">
-                <span className="text-purple-600 font-semibold">427</span>
+                <span className="text-purple-600 font-semibold">
+                  {codeChallenge.a}
+                </span>
                 <span>+</span>
-                <span className="text-purple-600 font-semibold">628</span>
+                <span className="text-purple-600 font-semibold">
+                  {codeChallenge.b}
+                </span>
               </div>
               <span>=</span>
               <input
                 type="text"
                 placeholder="Resultado*"
-                className="w-full lg:flex-1 px-4 py-2 rounded-md bg-white text-sm border border-gray-300"
+                className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 ${
+                  errors.security_result
+                    ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
+                    : "border-gray-300"
+                }`}
+                value={formData.security_result}
+                onChange={(e) =>
+                  handleChange("security_result", e.target.value)
+                }
               />
             </div>
           </div>

@@ -15,7 +15,8 @@ require get_template_directory() . '/inc/homepage-section-cpt.php';
 add_action('rest_api_init', function () {
     remove_filter('rest_pre_serve_request', 'rest_send_cors_headers');
     add_filter('rest_pre_serve_request', function ($value) {
-        header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Origin: http://localhost:5173");
+        header("Access-Control-Allow-Credentials: true");
         return $value;
     });
 });
@@ -33,7 +34,8 @@ add_action('rest_api_init', function () {
     ]);
 }, 1);
 
-function get_public_media($request) {
+function get_public_media($request)
+{
     $id = (int) $request['id'];
     $post = get_post($id);
 
