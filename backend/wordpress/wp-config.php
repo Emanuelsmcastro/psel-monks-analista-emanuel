@@ -75,14 +75,14 @@ define( 'DB_COLLATE', getenv_docker('WORDPRESS_DB_COLLATE', '') );
  *
  * @since 2.6.0
  */
-define( 'AUTH_KEY',         getenv_docker('WORDPRESS_AUTH_KEY',         '52a1fed574b11edf5c734a256431645d6397bb04') );
-define( 'SECURE_AUTH_KEY',  getenv_docker('WORDPRESS_SECURE_AUTH_KEY',  '066d41121699dfdf0de0b690d59347d9e343a4fe') );
-define( 'LOGGED_IN_KEY',    getenv_docker('WORDPRESS_LOGGED_IN_KEY',    '0ec46e9fcfde99cfa2b987a5a8235590d71d1564') );
-define( 'NONCE_KEY',        getenv_docker('WORDPRESS_NONCE_KEY',        'b1e69d00c6adc4e70effd582192b1fe6c34e9be0') );
-define( 'AUTH_SALT',        getenv_docker('WORDPRESS_AUTH_SALT',        '1a1fc6c87135e8436d6f52341e5753c0c0d4310f') );
-define( 'SECURE_AUTH_SALT', getenv_docker('WORDPRESS_SECURE_AUTH_SALT', '281aaf67b934f827ef7821073ceba9ac2df21249') );
-define( 'LOGGED_IN_SALT',   getenv_docker('WORDPRESS_LOGGED_IN_SALT',   'e7fd7471abfd967ac9b84ed1ce3ce3a58a5ea5a8') );
-define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       'be802a3b779f6509b33c7f7c028e2d0cb8b00175') );
+define( 'AUTH_KEY',         getenv_docker('WORDPRESS_AUTH_KEY',         'f9a7488f1688f29b4554d0b29eda910c7d088579') );
+define( 'SECURE_AUTH_KEY',  getenv_docker('WORDPRESS_SECURE_AUTH_KEY',  '71565ec9a1b200a2c2d8f562492a4793fe4eafa9') );
+define( 'LOGGED_IN_KEY',    getenv_docker('WORDPRESS_LOGGED_IN_KEY',    '27af0c2a4c064f63775e87a8f316ff6692ab4fce') );
+define( 'NONCE_KEY',        getenv_docker('WORDPRESS_NONCE_KEY',        'a2b751cb24cdcc54d196a5022b040952aeb60d6c') );
+define( 'AUTH_SALT',        getenv_docker('WORDPRESS_AUTH_SALT',        '1904251a7eb0ed1152262f13fd6d7577d28d5b59') );
+define( 'SECURE_AUTH_SALT', getenv_docker('WORDPRESS_SECURE_AUTH_SALT', '5221375e719f3abf84f09b5656ec0a0ec3ad531e') );
+define( 'LOGGED_IN_SALT',   getenv_docker('WORDPRESS_LOGGED_IN_SALT',   '75797cc1c6e5b9995452dcd0753c7765dde943a6') );
+define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       '53f5f357c36345b7410284033311f4c5045f95a7') );
 // (See also https://wordpress.stackexchange.com/a/152905/199287)
 
 /**#@-*/
@@ -92,6 +92,12 @@ define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       'be802a3
  *
  * You can have multiple installations in one database if you give each
  * a unique prefix. Only numbers, letters, and underscores please!
+ *
+ * At the installation time, database tables are created with the specified prefix.
+ * Changing this value after WordPress is installed will make your site think
+ * it has not been installed.
+ *
+ * @link https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#table-prefix
  */
 $table_prefix = getenv_docker('WORDPRESS_TABLE_PREFIX', 'wp_');
 
