@@ -21,7 +21,15 @@ export async function fetchProductsSections(): Promise<GenericSectionType[]> {
 export async function fetchSimpleGallery(): Promise<GenericSectionType[]> {
   const response = await fetch(`${BASE_URL}/simple-gallery?_embed`);
   if (!response.ok) {
-    throw new Error("Failed to fetch Products section");
+    throw new Error("Failed to fetch Simple Gallery section");
+  }
+  return (await response.json()) as GenericSectionType[];
+}
+
+export async function fetchCategoriesSection(): Promise<GenericSectionType[]> {
+  const response = await fetch(`${BASE_URL}/categories-section?_embed`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch Categories Section section");
   }
   return (await response.json()) as GenericSectionType[];
 }
