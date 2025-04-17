@@ -4,6 +4,7 @@ import Scroll from "@assets/scroll.png";
 import { fetchHeroLPSections } from "@services/wordpress";
 import { GenericSectionType } from "../../types/globalTypes";
 import { useEffect, useState } from "react";
+import { FiMenu, FiX } from "react-icons/fi";
 
 export default function HeroLPSection() {
   const emptyHeroLPSection: GenericSectionType = {
@@ -26,6 +27,7 @@ export default function HeroLPSection() {
   const [heroLPSection, setHeroLPSection] =
     useState<GenericSectionType>(emptyHeroLPSection);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     fetchHeroLPSections().then((data) => {
@@ -41,18 +43,37 @@ export default function HeroLPSection() {
       id="hero-lp"
       className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-[3fr_2fr] rounded-b-3xl bg-[var(--bg-secundary)]"
     >
-      <div className="pt-6 px-6 sm:pt-10 sm:px-10 lg:pl-10 flex flex-col justify-between">
-        <div className="w-full flex flex-wrap gap-4 sm:gap-6 lg:gap-8 items-center mb-6 sm:mb-10 lg:mb-14">
+      <div className="pt-6 px-6 sm:pt-10 sm:px-10 xl:pl-10 flex flex-col justify-between">
+        <div className="flex items-center justify-between px-4 sm:px-6 xl:px-10">
           <img src={Logo} alt="Logo" className="w-[140px] h-[24px]" />
-          <ul className="flex flex-wrap gap-4 sm:gap-6 lg:gap-8 sm:text-[18px] lg:text-[20px]">
+
+          {/* Menu tradicional - visível até lg */}
+          <ul className="hidden xl:flex flex-wrap gap-6 text-[18px]">
             <li>Categoria 1</li>
             <li>Categoria 2</li>
             <li>Categoria 3</li>
             <li>Categoria 4</li>
           </ul>
+
+          {/* Menu hambúrguer - visível em xl e acima */}
+          <button
+            className="xl:hidden text-2xl"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+          >
+            {isMenuOpen ? <FiX /> : <FiMenu />}
+          </button>
         </div>
 
-        <div className="flex flex-col gap-2 sm:gap-4 mb-6 sm:mb-10 lg:mb-14">
+        {isMenuOpen && (
+          <ul className="absolute w-full left-0 top-20 flex flex-col gap-4 text-base xl:hidden bg-[#DFBBFE] text-black p-4 rounded-xl shadow-md mt-4">
+            <li>Categoria 1</li>
+            <li>Categoria 2</li>
+            <li>Categoria 3</li>
+            <li>Categoria 4</li>
+          </ul>
+        )}
+
+        <div className="flex flex-col gap-2 sm:gap-4 mb-6 sm:mb-10 lg:mb-14 pt-20">
           {isLoading ? (
             <>
               <div className="h-6 w-1/2 bg-gray-600 rounded animate-pulse" />
