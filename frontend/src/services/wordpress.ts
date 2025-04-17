@@ -3,8 +3,8 @@ import {
   GenericSectionType,
 } from "../types/globalTypes";
 
-const BASE_URL = "http://localhost:8000/wp-json/wp/v2";
-const BASE_PSEL_URL = "http://localhost:8000/wp-json/psel";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_PSEL_URL = import.meta.env.VITE_API_PSEL_BASE_URL;
 
 export async function fetchHeroLPSections(): Promise<GenericSectionType[]> {
   const response = await fetch(`${BASE_URL}/hero-lp-section?_embed`);

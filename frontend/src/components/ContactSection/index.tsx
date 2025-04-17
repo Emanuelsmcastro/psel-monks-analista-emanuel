@@ -6,6 +6,30 @@ import {
 import { useState, useRef, useEffect, useCallback } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
+function FormSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="h-10 bg-gray-300 rounded-md animate-pulse w-full" />
+      <div className="h-10 bg-gray-300 rounded-md animate-pulse w-full" />
+      <div className="h-[120px] bg-gray-300 rounded-md animate-pulse w-full sm:col-span-2" />
+
+      {/* Verificação de segurança */}
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 items-start lg:items-center sm:col-span-2 mt-2">
+        <span className="shrink-0 w-40 h-6 bg-gray-300 rounded-md animate-pulse" />
+        <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 flex-grow-1 w-full">
+          <div className="bg-gray-200 p-2 rounded-md flex items-center gap-4 lg:gap-8">
+            <div className="w-8 h-6 bg-gray-300 rounded animate-pulse" />
+            <span>+</span>
+            <div className="w-8 h-6 bg-gray-300 rounded animate-pulse" />
+          </div>
+          <span>=</span>
+          <div className="h-10 bg-gray-300 rounded-md animate-pulse flex-1 w-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ContactSection() {
   const defaultFormData = {
     name: "",
@@ -22,6 +46,7 @@ export default function ContactSection() {
     message: false,
     security_result: false,
   });
+  const [isLoading, setLoading] = useState(true);
 
   // Refs para debounce
   const debounceTimers = useRef<{ [key: string]: NodeJS.Timeout }>({});
@@ -65,13 +90,14 @@ export default function ContactSection() {
   };
 
   const getCodeChallenge = useCallback(() => {
-    fetchContactSecurityChallenge().then((data) => {
-      if (!data) {
-        toast.error("Erro ao buscar desafio de segurança");
-        return;
-      }
-      setCodeChallenge(data);
-    });
+    fetchContactSecurityChallenge()
+      .then((data) => {
+        setCodeChallenge(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        toast.error(error.message || "Erro ao buscar desafio de segurança");
+      });
   }, []);
 
   function handleSubmit() {
@@ -124,82 +150,88 @@ export default function ContactSection() {
             *Lorem ipsum dolor sit amet consectetur
           </span>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="Nome*"
-              className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 ${
-                errors.name
-                  ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
-                  : "border-gray-300"
-              }`}
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-            />
+          {isLoading ? (
+            <FormSkeleton />
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Nome*"
+                  className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 ${
+                    errors.name
+                      ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
+                      : "border-gray-300"
+                  }`}
+                  value={formData.name}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                />
 
-            <input
-              type="email"
-              placeholder="Email*"
-              className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 ${
-                errors.email
-                  ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
-                  : "border-gray-300"
-              }`}
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-            />
+                <input
+                  type="email"
+                  placeholder="Email*"
+                  className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 ${
+                    errors.email
+                      ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
+                      : "border-gray-300"
+                  }`}
+                  value={formData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                />
 
-            <textarea
-              placeholder="Mensagem*"
-              className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 min-h-[120px] sm:col-span-2 resize-none ${
-                errors.message
-                  ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
-                  : "border-gray-300"
-              }`}
-              value={formData.message}
-              onChange={(e) => handleChange("message", e.target.value)}
-            />
-          </div>
-
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 items-start lg:items-center">
-            <span className="shrink-0 font-semibold w-max">
-              Verificação de segurança
-            </span>
-            <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 flex-grow-1 w-full">
-              <div className="bg-[#DFDCD5] p-2 rounded-md flex items-center gap-4 lg:gap-8">
-                <span className="text-purple-600 font-semibold">
-                  {codeChallenge.a}
-                </span>
-                <span>+</span>
-                <span className="text-purple-600 font-semibold">
-                  {codeChallenge.b}
-                </span>
+                <textarea
+                  placeholder="Mensagem*"
+                  className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 min-h-[120px] sm:col-span-2 resize-none ${
+                    errors.message
+                      ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
+                      : "border-gray-300"
+                  }`}
+                  value={formData.message}
+                  onChange={(e) => handleChange("message", e.target.value)}
+                />
               </div>
-              <span>=</span>
-              <input
-                type="text"
-                placeholder="Resultado*"
-                className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 ${
-                  errors.security_result
-                    ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
-                    : "border-gray-300"
-                }`}
-                value={formData.security_result}
-                onChange={(e) =>
-                  handleChange("security_result", e.target.value)
-                }
-              />
-            </div>
-          </div>
 
-          <div className="flex justify-center">
-            <button
-              className="bg-purple-200 text-purple-800 font-semibold text-sm px-6 py-2 rounded-md transition hover:bg-purple-300"
-              onClick={handleSubmit}
-            >
-              Lorem ipsum
-            </button>
-          </div>
+              <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 items-start lg:items-center">
+                <span className="shrink-0 font-semibold w-max">
+                  Verificação de segurança
+                </span>
+                <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-8 flex-grow-1 w-full">
+                  <div className="bg-[#DFDCD5] p-2 rounded-md flex items-center gap-4 lg:gap-8">
+                    <span className="text-purple-600 font-semibold">
+                      {codeChallenge.a}
+                    </span>
+                    <span>+</span>
+                    <span className="text-purple-600 font-semibold">
+                      {codeChallenge.b}
+                    </span>
+                  </div>
+                  <span>=</span>
+                  <input
+                    type="text"
+                    placeholder="Resultado*"
+                    className={`px-4 py-2 rounded-md bg-white text-sm border transition-all duration-300 ${
+                      errors.security_result
+                        ? "border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.4)]"
+                        : "border-gray-300"
+                    }`}
+                    value={formData.security_result}
+                    onChange={(e) =>
+                      handleChange("security_result", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  className="bg-purple-200 text-purple-800 font-semibold text-sm px-6 py-2 rounded-md transition hover:bg-purple-300"
+                  onClick={handleSubmit}
+                >
+                  Lorem ipsum
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>
