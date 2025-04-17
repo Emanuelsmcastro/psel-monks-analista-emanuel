@@ -1,0 +1,50 @@
+services:
+  db:
+    image: mysql:5.7
+    container_name: wp-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - psel-monks-analista-emanuel-network
+
+  wordpress:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wordpress
+    ports:
+      - "8000:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./backend/wordpress:/var/www/html
+    networks:
+      - psel-monks-analista-emanuel-network
+    depends_on:
+      - db
+
+  react:
+    container_name: react
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4173:4173"
+    networks:
+      - psel-monks-analista-emanuel-network
+
+volumes:
+  db_data:
+
+networks:
+  psel-monks-analista-emanuel-network:
+    driver: bridge

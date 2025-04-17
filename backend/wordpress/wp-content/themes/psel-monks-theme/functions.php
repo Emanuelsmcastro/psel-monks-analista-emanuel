@@ -15,7 +15,8 @@ require get_template_directory() . '/inc/homepage-section-cpt.php';
 add_action('rest_api_init', function () {
     remove_filter('rest_pre_serve_request', 'rest_send_cors_headers');
     add_filter('rest_pre_serve_request', function ($value) {
-        header("Access-Control-Allow-Origin: http://localhost:5173");
+        $origin = get_option('cors_allowed_origin', 'http://localhost:5173');
+        header("Access-Control-Allow-Origin: $origin");
         header("Access-Control-Allow-Credentials: true");
         return $value;
     });
@@ -33,6 +34,53 @@ add_action('rest_api_init', function () {
         ],
     ]);
 }, 1);
+
+add_action('admin_menu', function () {
+    add_options_page(
+        'CORS Settings',
+        'CORS Settings',
+        'manage_options',
+        'cors-settings',
+        'render_cors_settings_page'
+    );
+});
+
+add_action('admin_init', function () {
+    register_setting('cors_settings_group', 'cors_allowed_origin');
+
+    add_settings_section(
+        'cors_main_section',
+        'Configuração de CORS',
+        null,
+        'cors-settings'
+    );
+
+    add_settings_field(
+        'cors_allowed_origin_field',
+        'Access-Control-Allow-Origin',
+        function () {
+            $value = get_option('cors_allowed_origin', 'http://localhost:5173');
+            echo "<input type='text' name='cors_allowed_origin' value='" . esc_attr($value) . "' class='regular-text' />";
+        },
+        'cors-settings',
+        'cors_main_section'
+    );
+});
+
+function render_cors_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Configurações de CORS</h1>
+        <form method="post" action="options.php">
+            <?php
+            settings_fields('cors_settings_group');
+            do_settings_sections('cors-settings');
+            submit_button();
+            ?>
+        </form>
+    </div>
+    <?php
+}
 
 function get_public_media($request)
 {
