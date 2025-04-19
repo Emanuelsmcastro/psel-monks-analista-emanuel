@@ -35,7 +35,8 @@ Construir uma landing page totalmente dinâmica, onde os textos, imagens, links 
 
 - ✅ Página 100% responsiva com base no mockup
 - ✅ Consumo dinâmico de dados via API do WordPress
-- ✅ Validação de formulário com feedback visual via toast
+- ✅ Validação de formulário com feedback visual via toast:
+  ![Formulário](./images/front-form-validations.png)
 - ✅ Verificação cruzada entre frontend e backend com código de soma
 - ✅ Salva os dados do formulário em um Custom Post Type
 
@@ -64,7 +65,7 @@ Construir uma landing page totalmente dinâmica, onde os textos, imagens, links 
 ```bash
 git clone https://github.com/Emanuelsmcastro/psel-monks-analista-emanuel.git
 cd psel-monks-analista-emanuel
-docker-compose up -d --build
+docker-compose up -d --build ou docker compose up -d --build
 ```
 
 Acesse:
