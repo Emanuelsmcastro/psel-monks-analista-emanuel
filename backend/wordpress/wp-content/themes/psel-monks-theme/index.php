@@ -9,7 +9,6 @@ get_header();
 
     <p class="text-lg text-gray-700 mb-8">
       Esta landing page foi desenvolvida como parte de um processo seletivo, utilizando React no frontend e WordPress como backend (CMS headless).
-      Todo o conteúdo exibido aqui é carregado dinamicamente via API REST.
     </p>
 
     <section class="mb-12">
