@@ -49,7 +49,7 @@ Cada componente consome um Custom Post Type específico da API REST do WordPress
 Os dados são carregados dinamicamente via `fetch` com `credentials: 'include'` para manter a sessão (importante para o formulário). Os serviços estão definidos em:
 
 ```ts
-/src/ceeirssv / wordpress.ts;
+/src/services/wordpress.ts;
 ```
 
 Endpoints consumidos:
