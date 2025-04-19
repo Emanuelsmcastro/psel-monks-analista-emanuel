@@ -142,6 +142,8 @@ Para instruções mais detalhadas de configuração, uso e arquitetura do projet
 
 👉 [WORDPRESS](./docs/WP-DOC.md)
 
+👉 [FRONTEND](./docs/FRONT-DOC.md)
+
 ---
 
 ## 👤 Autor
