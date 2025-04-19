@@ -126,3 +126,9 @@ curl -b cookie.txt -X POST http://localhost:8000/wp-json/psel/v1/contact \
 - [x] Dados das seções da landing page criados com conteúdo
 - [x] Teste de envio de formulário retorna status `200 OK`
 - [x] Submissões do formulário aparecem no CPT `Contact Submissions`
+
+## 📄 Documentação Extra
+
+Para instruções mais detalhadas sobre o preenchimento das seções:
+
+## 👉 [WORDPRESS SEÇÕES](./WP-SECTIONS.md)
