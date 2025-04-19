@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/helveticaneue-thin.woff2") format("woff2");
+  font-weight: 100;
+  font-style: thin;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/helveticaneue.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/helveticaneue-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: medium;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/helveticaneue-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: bold;
+  font-display: swap;
+}
+
+@layer components {
+  .badge-category {
+    @apply px-4 py-2 border border-purple-600 rounded-full text-purple-600 text-sm sm:text-base hover:bg-purple-100 transition-colors;
+  }
+}
+
+:root {
+  font-family: "Helvetica Neue", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --color-primary: #eae8e4;
+  --color-secundary: #2d2d2d;
+
+  --bg-primary: #eae8e4;
+  --bg-secundary: #2d2d2d;
+}
+
+body {
+  background-color: var(--bg-primary);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
