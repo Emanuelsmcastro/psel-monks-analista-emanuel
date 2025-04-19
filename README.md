@@ -113,7 +113,8 @@ DB_ROOT_PASSWORD=wordpress
 ### Frontend
 
 ```env
-VITE_API_URL=http://localhost:8000/wp-json
+VITE_API_BASE_URL=http://localhost:8000/wp-json/wp/v2
+VITE_API_PSEL_BASE_URL=http://localhost:8000/wp-json/psel
 ```
 
 ---
