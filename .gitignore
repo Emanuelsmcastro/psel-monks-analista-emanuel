@@ -2,6 +2,7 @@
 #Wordpress
 /backend/wordpress/*
 !/backend/wordpress/wp-content/themes/psel-monks-theme/**
+!/backend/wordpress/.htaccess
 
 # Logs
 logs
